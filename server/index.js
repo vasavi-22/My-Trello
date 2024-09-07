@@ -5,6 +5,7 @@ import cors from "cors";
 import { config } from "./src/config/index.js";
 
 import userRoutes from "./src/routes/user.route.js";
+import taskRoutes from "./src/routes/task.route.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -33,6 +34,7 @@ app.get('/', (req, res) => {
 });
 
 app.use("/user", userRoutes);
+app.use("/task", taskRoutes);
 
 ( async () => {
     try {
