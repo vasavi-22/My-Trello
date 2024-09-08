@@ -144,21 +144,19 @@ const Dashboard = () => {
 
   // const getFilteredTasks = (status) => tasks.filter((task) => task.status === status)
 
+  // Function to save tasks to backend
   const saveTasksToBackend = async (updatedTasks) => {
-    try {
-      const response = await axios.post("http://localhost:5000/tasks/save-tasks", updatedTasks);
-
-      if (!response.ok) {
-        throw new Error("Failed to save tasks");
-      }
-
-      const data = await response.json();
-      console.log("Tasks saved:", data);
-    } catch (error) {
-      console.error("Error saving tasks:", error);
+  try {
+    const response = await axios.post("http://localhost:5000/tasks/save-tasks", { tasks: updatedTasks });
+    console.log(response);
+    if (!response) {
+      throw new Error("Failed to save tasks");
     }
-  };
-
+    console.log("Tasks saved:", response.data);
+  } catch (error) {
+    console.error("Error saving tasks:", error);
+  }
+};
   const sensors = useSensors(
     useSensor(PointerSensor, TouchSensor, KeyboardSensor)
   );
@@ -177,35 +175,53 @@ const Dashboard = () => {
       return;
     }
 
+    let updatedTasks;
+
     if (!overTask || activeTask.status !== overTask.status) {
       // Moving task between different lists or into an empty list
       const targetStatus = overTask ? overTask.status : over.id;
 
-      setTasks((prevTasks) => {
-        const updatedTasks = prevTasks.map((task) => {
-          if (task._id === active.id) {
-            return {
-              ...task,
-              status: targetStatus, // Set the task's status to the target column's status
-            };
-          }
-          return task;
-        });
+      // setTasks((prevTasks) => {
+      //   const updatedTasks = prevTasks.map((task) => {
+      //     if (task._id === active.id) {
+      //       return {
+      //         ...task,
+      //         status: targetStatus, // Set the task's status to the target column's status
+      //       };
+      //     }
+      //     return task;
+      //   });
 
-        return updatedTasks;
+      //   return updatedTasks;
+      // });
+
+      updatedTasks = tasks.map((task) => {
+        if (task._id === active.id) {
+          return {
+            ...task,
+            status: targetStatus, // Update task status
+          };
+        }
+        return task;
       });
+
     } else {
       // Reordering task within the same list
       const activeIndex = tasks.findIndex((task) => task._id === active.id);
       const overIndex = tasks.findIndex((task) => task._id === over.id);
 
       if (activeIndex !== overIndex) {
-        setTasks((prevTasks) => {
-          return arrayMove(prevTasks, activeIndex, overIndex);
-        });
+        // setTasks((prevTasks) => {
+        //   return arrayMove(prevTasks, activeIndex, overIndex);
+        // });
+        updatedTasks = arrayMove(tasks, activeIndex, overIndex);
       }
     }
-    // saveTasksToBackend(tasks);
+    
+    if (updatedTasks) {
+      setTasks(updatedTasks); // Update the state
+      saveTasksToBackend(updatedTasks); // Save updated tasks to the backend
+    }
   };
 
   

@@ -61,3 +61,29 @@ export const deleteTask = async (req, res) => {
   res.status(204).send();
 };
 
+export const saveTasks = async (req, res) => {
+  const { tasks } = req.body; // Array of tasks with updated order or status
+
+  try {
+    if (!tasks || tasks.length === 0) {
+      return res.status(400).json({ error: 'No tasks provided' });
+    }
+
+    // Iterate over the tasks and update them one by one
+    const updatePromises = tasks.map(async (task) => {
+      const { _id, status } = task; // Assuming the task has _id and status
+
+      // Update the task in the database by _id
+      await Task.findByIdAndUpdate(_id, { status }, { new: true });
+    });
+
+    // Wait for all updates to complete
+    await Promise.all(updatePromises);
+
+    // Send a success response
+    res.status(200).json({ message: 'Tasks updated successfully' });
+  } catch (error) {
+    console.error('Error updating tasks:', error);
+    res.status(500).json({ error: 'Failed to update tasks' });
+  }
+};
