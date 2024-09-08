@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 // import { auth, googleAuthProvider } from "../../firebase";
 // import { signInWithPopup } from "firebase/auth";
 import "./login.css";
+import UserContext from "../../utils/UserContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  const { loggedInUser, setUser} = useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,7 +20,11 @@ const Login = () => {
         email,
         password,
       });
+      const token = response.data.token; // Assuming token is returned in the response
+      console.log(response, "response");
+      setUser(response.data);
       const logData = JSON.parse(response.config.data);
+      console.log(logData, "logdata");
       navigate("/dashboard", { state: { logData } });
     } catch (error) {
       alert("Login failed!");

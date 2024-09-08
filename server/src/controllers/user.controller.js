@@ -46,7 +46,7 @@ export const login = async (req, res) => {
     const session = new Session({ userId: user._id, token });
     await session.save();
 
-    res.json({ token });
+    res.json({ token, user });
   } catch (error) {
     console.log(error);
     res.status(500).send("Server error");
@@ -62,6 +62,7 @@ export const logout = async (req, res) => {
 
   try {
     // Find and delete the session by token
+    console.log(token);
     const session = await Session.findOneAndDelete({ token });
 
     if (!session) {
@@ -71,6 +72,7 @@ export const logout = async (req, res) => {
     // Successfully logged out
     res.json({ message: "Logged out successfully" });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Server error", error });
   }
 };
