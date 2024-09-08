@@ -58,7 +58,7 @@ const Header = () => {
             </Link>
           </li>
           <li>
-            <img src={loggedInUser?.user?.avatar} alt="Logo" />
+            <img src={loggedInUser?.user?.avatar} alt="Logo" style={{width: "40px", height: "33px", borderRadius : "50%"}}/>
           </li>
         </ul>
       ) : (

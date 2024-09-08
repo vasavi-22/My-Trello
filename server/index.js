@@ -1,50 +1,64 @@
-import express from "express";
-import session from "express-session";
-import mongoose from "mongoose";
-import cors from "cors";
-import { config } from "./src/config/index.js";
+import express from 'express';
+import session from 'express-session';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-import userRoutes from "./src/routes/user.route.js";
-import taskRoutes from "./src/routes/task.route.js";
+import { config } from './src/config/index.js';
+import userRoutes from './src/routes/user.route.js';
+import taskRoutes from './src/routes/task.route.js';
+
+// Get directory name for static files
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI;
-const JWT_SECRET = process.env.JWT_SECRET;
 
 // Configure CORS
-app.use(cors({
-    origin: 'http://localhost:3000', // Allow your frontend's origin
-    credentials: true // Allow credentials (cookies, authorization headers, etc.)
-}));
+const corsOptions = {
+  origin: 'http://localhost:3000', // Frontend origin
+  credentials: true, // Allow cookies and credentials
+};
 
+// Apply CORS middleware
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Handle preflight requests
+
+// Session configuration
 app.use(session({
-    secret: 'mySuperSecretKey123456!',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false } // Set secure to true in production with HTTPS
+  secret: 'mySuperSecretKey123456!',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }, // Set secure to true in production with HTTPS
 }));
 
 // Middleware for parsing JSON and URL-encoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve static files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Route handlers
+app.use('/user', userRoutes);
+app.use('/tasks', taskRoutes);
+
 app.get('/', (req, res) => {
-    res.send('hello world');
+  res.send('Hello World');
 });
 
-app.use("/user", userRoutes);
-app.use("/tasks", taskRoutes);
-
-( async () => {
-    try {
-        await mongoose.connect(config.DATABASE);
-        console.log("MongoDB connected");
-  
-        app.listen(process.env.PORT, () => {
-            console.log(`Server starts at port ${config.PORT}`);
-        });
-    } catch (error) {
-        console.error("Failed to connect to MongoDB", error);
-    }
-})()
+// Connect to MongoDB and start server
+(async () => {
+  try {
+    await mongoose.connect(config.DATABASE);
+    console.log('MongoDB connected');
+    
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Failed to connect to MongoDB', error);
+  }
+})();

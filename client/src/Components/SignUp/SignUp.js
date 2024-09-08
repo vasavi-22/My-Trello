@@ -27,8 +27,10 @@ const SignUp = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    console.log(file.name);
-    setAvatar(file.name);
+    if (file) {
+      setAvatar(file);
+      console.log(file.name);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -38,13 +40,27 @@ const SignUp = () => {
       return;
     }
 
+    const formData = new FormData();
+    formData.append("firstName", firstName);
+    formData.append("lastName", lastName);
+    formData.append("email", email);
+    formData.append("password", password);
+    if (avatar) {
+      formData.append("avatar", avatar);
+    }
+
     try {
-      await axios.post("http://localhost:5000/user/signup", {
-        firstName,
-        lastName,
-        email,
-        password,
-        avatar
+      // await axios.post("http://localhost:5000/user/signup", {
+      //   firstName,
+      //   lastName,
+      //   email,
+      //   password,
+      //   avatar,
+      // });
+      await axios.post("http://localhost:5000/user/signup", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
       navigate("/login");
     } catch (error) {
@@ -54,7 +70,7 @@ const SignUp = () => {
 
   const handleGoogleSignup = async () => {
     try {
-    //   await signInWithRedirect(auth, googleAuthProvider);
+      //   await signInWithRedirect(auth, googleAuthProvider);
     } catch (error) {
       console.error(error.message);
     }
@@ -63,11 +79,11 @@ const SignUp = () => {
   // Call this function in your component to handle the result after redirect
   const handleRedirectResult = async () => {
     try {
-    //   const result = await getRedirectResult(auth);
-    //   if (result) {
-    //     console.log(result.user, "user entered");
-    //     navigate("/dashboard"); // Navigate to the dashboard
-    //   }
+      //   const result = await getRedirectResult(auth);
+      //   if (result) {
+      //     console.log(result.user, "user entered");
+      //     navigate("/dashboard"); // Navigate to the dashboard
+      //   }
     } catch (error) {
       console.error(error.message);
     }
@@ -117,12 +133,9 @@ const SignUp = () => {
           required
         />
         <br />
-        <input 
-            type="file" 
-            accept="image/*" 
-            onChange={handleImageChange} 
-        />
-        {avatar && <p>Selected file: {avatar.name}</p>}{" "}{/* Display file name if selected */}
+        <input type="file" accept="image/*" onChange={handleImageChange} />
+        {avatar && <p>Selected file: {avatar.name}</p>}{" "}
+        {/* Display file name if selected */}
         {passwordError && <p style={{ color: "red" }}>{passwordError}</p>}
         <br />
         <button type="submit" disabled={!!passwordError}>

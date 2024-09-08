@@ -2,9 +2,41 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import Session from "../models/session.model.js";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from 'url';
+
+// Get the directory name from the current module URL
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Ensure uploads directory exists
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Configure Multer storage
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Directory where the files will be stored
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+  },
+});
+
+const upload = multer({ storage: storage });
+
+// Middleware for handling file uploads
+export const uploadAvatar = upload.single('avatar');
+
 
 export const signUp = async (req, res) => {
-  const { firstName, lastName, email, password, avatar } = req.body;
+  const { firstName, lastName, email, password } = req.body;
+  const avatar = req.file ? `http://localhost:5000/uploads/${path.basename(req.file.path)}` : ''; // Full URL to the image
+
   console.log(req.body);
   const hashedPassword = await bcrypt.hash(password, 10);
 
