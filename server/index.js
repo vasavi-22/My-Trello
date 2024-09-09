@@ -18,22 +18,24 @@ const PORT = process.env.PORT || 5000;
 
 // Configure CORS
 const corsOptions = {
-  origin: 'https://my-trello-frontend-gray.vercel.app', // Frontend origin
+  origin: 'http://localhost:3000/', // Frontend origin
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow necessary methods
   credentials: true, // Allow cookies and credentials
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow necessary headers
 };
 
 // Apply CORS middleware
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions)); // Handle preflight requests
 
+// Custom middleware to set CORS headers
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://my-trello-frontend-gray.vercel.app');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');  // Frontend origin in development
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Credentials', 'true');  // Enable credentials
   if (req.method === 'OPTIONS') {
-    return res.sendStatus(200); // Handle preflight request
+    return res.sendStatus(200);  // Preflight request
   }
   next();
 });

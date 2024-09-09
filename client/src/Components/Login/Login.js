@@ -19,6 +19,8 @@ const Login = () => {
       const response = await axios.post("https://my-trello-api.vercel.app/user/login", {
         email,
         password,
+      },{
+        withCredentials: true, // This ensures cookies are sent with the request
       });
       const token = response.data.token; // Assuming token is returned in the response
       console.log(response, "response");
