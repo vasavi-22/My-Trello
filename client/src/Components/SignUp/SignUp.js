@@ -50,14 +50,14 @@ const SignUp = () => {
     }
 
     try {
-      // await axios.post("http://localhost:5000/user/signup", {
+      // await axios.post("https://my-trello-api.vercel.app/user/signup", {
       //   firstName,
       //   lastName,
       //   email,
       //   password,
       //   avatar,
       // });
-      await axios.post("http://localhost:5000/user/signup", formData, {
+      await axios.post("https://my-trello-api.vercel.app/user/signup", formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
