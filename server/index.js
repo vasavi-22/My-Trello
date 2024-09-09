@@ -9,6 +9,8 @@ import { config } from './src/config/index.js';
 import userRoutes from './src/routes/user.route.js';
 import taskRoutes from './src/routes/task.route.js';
 
+import helmet from "helmet";
+
 // Get directory name for static files
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -62,6 +64,16 @@ app.use('/tasks', taskRoutes);
 app.get('/', (req, res) => {
   res.send('Hello World');
 });
+
+
+// Security Measures
+app.use(helmet());
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
 
 // Connect to MongoDB and start server
 (async () => {
