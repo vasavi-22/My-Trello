@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 5000;
 
 // Configure CORS
 const corsOptions = {
-  origin: 'http://localhost:3000/', // Frontend origin
+  origin: ['http://localhost:3000', 'https://my-trello-frontend-gray.vercel.app'], // Frontend origin
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow necessary methods
   credentials: true, // Allow cookies and credentials
   allowedHeaders: ['Content-Type', 'Authorization'], // Allow necessary headers
