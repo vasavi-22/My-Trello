@@ -1,10 +1,10 @@
-const request = require('supertest');
+import request from "supertest";
 const app = require('../../index'); // Assuming Express app is exported from index.js
 
 describe('User Endpoints', () => {
   it('should create a new user', async () => {
     const res = await request(app)
-      .post('/api/signup')
+      .post('/signup')
       .send({
         email: 'test@example.com',
         password: 'password123'
@@ -14,7 +14,7 @@ describe('User Endpoints', () => {
 
   it('should not create a user with invalid email', async () => {
     const res = await request(app)
-      .post('/api/signup')
+      .post('/signup')
       .send({
         email: 'not-an-email',
         password: 'password123'
