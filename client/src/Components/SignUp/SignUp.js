@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-// import { auth, googleAuthProvider } from "../../firebase";
-// import { signInWithPopup } from "firebase/auth";
-// import { signInWithRedirect, getRedirectResult } from "firebase/auth";
 import "./signup.css";
 
 const SignUp = () => {
@@ -57,7 +54,7 @@ const SignUp = () => {
       //   password,
       //   avatar,
       // });
-      await axios.post("https://my-trello-api.vercel.app/user/signup", formData, {
+      await axios.post("/user/signup", formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -65,14 +62,6 @@ const SignUp = () => {
       navigate("/login");
     } catch (error) {
       alert("Signup failed!");
-    }
-  };
-
-  const handleGoogleSignup = async () => {
-    try {
-      //   await signInWithRedirect(auth, googleAuthProvider);
-    } catch (error) {
-      console.error(error.message);
     }
   };
 
@@ -144,7 +133,9 @@ const SignUp = () => {
         <p>
           Already have an account? <Link to="/login">Log In</Link>
         </p>
-        <button className="g-btn" onClick={handleGoogleSignup}>
+        <button className="g-btn" 
+        // onClick={handleGoogleSignup}
+        >
           Sign up with Google
         </button>
       </form>

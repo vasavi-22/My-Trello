@@ -1,10 +1,21 @@
 import React, { useContext, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-// import { auth, googleAuthProvider } from "../../firebase";
-// import { signInWithPopup } from "firebase/auth";
 import "./login.css";
 import UserContext from "../../utils/UserContext";
+
+function navigate(url){
+  console.log(url,"urlllllllllllllllllllllllllll");
+  window.location.href = url;
+}
+
+async function auth(){
+  const response = await fetch('http://localhost:5000/request',
+    {method : 'post'});
+  const data = await response.json();
+  console.log(data);
+  navigate(data.url);
+}
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -16,7 +27,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("https://my-trello-api.vercel.app/user/login", {
+      const response = await axios.post("/user/login", {
         email,
         password,
       },{
@@ -30,17 +41,6 @@ const Login = () => {
       navigate("/dashboard", { state: { logData } });
     } catch (error) {
       alert("Login failed!");
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    try {
-    //   const result = await signInWithPopup(auth, googleAuthProvider);
-    //   // Handle successful authentication here
-    //   console.log(result.user);
-    //   navigate("/dashboard"); // Navigate to the dashboard
-    } catch (error) {
-      console.error(error.message);
     }
   };
 
@@ -66,7 +66,7 @@ const Login = () => {
         <p>
           Don't have an account? <Link to="/signup"> Sign Up</Link>
         </p>
-        <button className="g-btn" onClick={handleGoogleLogin}>Login with Google</button>
+        <button className="g-btn" onClick={() => auth()}>Login with Google</button>
       </form>
     </div>
   );

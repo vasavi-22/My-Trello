@@ -33,7 +33,7 @@ const Header = () => {
     }
 
     axios
-      .post("https://my-trello-api.vercel.app/user/logout", { token }, { withCredentials: true })
+      .post("/user/logout", { token }, { withCredentials: true })
       .then((response) => {
         console.log(response.data);
         setLoginStatus(false); // Reset login status

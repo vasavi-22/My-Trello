@@ -37,7 +37,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (email) {
-      axios.get(`https://my-trello-api.vercel.app/tasks?email=${email}`).then((response) => {
+      axios.get(`/tasks?email=${email}`).then((response) => {
         console.log(response.data.tasks, "tasks");
         setTasks(response.data.tasks);
       });
@@ -49,7 +49,7 @@ const Dashboard = () => {
     const newTask = { title, description, status: "todo", email };
 
     try {
-      const response = await axios.post("https://my-trello-api.vercel.app/tasks", newTask);
+      const response = await axios.post("/tasks", newTask);
       setTasks([...tasks, response.data]);
       setTitle("");
       setDescription("");
@@ -73,7 +73,7 @@ const Dashboard = () => {
     const updatedTask = { title, description, status, email };
 
     try {
-      const response = await axios.put(`https://my-trello-api.vercel.app/tasks/${editTaskId}`, updatedTask);
+      const response = await axios.put(`/tasks/${editTaskId}`, updatedTask);
       setTasks(
         tasks.map((task) => (task._id === editTaskId ? response.data : task))
       );
@@ -97,7 +97,7 @@ const Dashboard = () => {
       return;
     }
     try {
-      await axios.delete(`https://my-trello-api.vercel.app/tasks/${taskId}`);
+      await axios.delete(`/tasks/${taskId}`);
       setTasks(tasks.filter((task) => task._id !== taskId));
     } catch (error) {
       console.error("Error deleting task:", error);
@@ -147,7 +147,7 @@ const Dashboard = () => {
   // Function to save tasks to backend
   const saveTasksToBackend = async (updatedTasks) => {
   try {
-    const response = await axios.post("https://my-trello-api.vercel.app/tasks/save-tasks", { tasks: updatedTasks });
+    const response = await axios.post("/tasks/save-tasks", { tasks: updatedTasks });
     console.log(response);
     if (!response) {
       throw new Error("Failed to save tasks");

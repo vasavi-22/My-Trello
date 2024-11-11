@@ -35,7 +35,7 @@ export const uploadAvatar = upload.single('avatar');
 
 export const signUp = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
-  const avatar = req.file ? `https://my-trello-api.vercel.app/uploads/${path.basename(req.file.path)}` : ''; // Full URL to the image
+  const avatar = req.file ? `http://localhost:5000/uploads/${path.basename(req.file.path)}` : ''; // Full URL to the image
 
   console.log(req.body);
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -57,6 +57,7 @@ export const signUp = async (req, res) => {
 };
 
 export const login = async (req, res) => {
+  console.log("************");
   const { email, password } = req.body;
   console.log(email);
   console.log(password);

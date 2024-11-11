@@ -9,6 +9,9 @@ import { config } from './src/config/index.js';
 import userRoutes from './src/routes/user.route.js';
 import taskRoutes from './src/routes/task.route.js';
 
+import authRouter from "./oauth.js";
+import requestRouter from "./requests.js";
+
 import helmet from "helmet";
 
 // Get directory name for static files
@@ -60,6 +63,10 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Route handlers
 app.use('/user', userRoutes);
 app.use('/tasks', taskRoutes);
+
+app.use('/oauth', authRouter);
+app.use('/request', requestRouter);
+
 
 app.get('/', (req, res) => {
   res.send('Hello World');
