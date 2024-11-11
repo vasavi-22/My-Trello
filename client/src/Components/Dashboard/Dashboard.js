@@ -27,7 +27,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Dashboard = () => {
   const location = useLocation();
-  const email = location?.state?.logData?.email;
+  const email = JSON.parse(location?.state?.userData).email;
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("");

@@ -36,9 +36,14 @@ const Login = () => {
       const token = response.data.token; // Assuming token is returned in the response
       console.log(response, "response");
       setUser(response.data);
-      const logData = JSON.parse(response.config.data);
-      console.log(logData, "logdata");
-      navigate("/dashboard", { state: { logData } });
+      // const logData = JSON.parse(response.config.data);
+      // console.log(logData, "logdata");
+      const userData = JSON.stringify(response.data.user);
+      console.log(userData, "userdata");
+      localStorage.setItem("user", userData);
+      localStorage.setItem("token",token);
+      navigate("/dashboard", { state: { userData } });
+
     } catch (error) {
       alert("Login failed!");
     }
