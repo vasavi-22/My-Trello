@@ -21,6 +21,10 @@ import axios from "axios";
 import "./dashboard.css";
 import Task from "./Task";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 const Dashboard = () => {
   const location = useLocation();
   const email = location?.state?.logData?.email;
@@ -54,6 +58,9 @@ const Dashboard = () => {
       setTitle("");
       setDescription("");
       setVisible(false);
+      toast.success("New Task added!", {
+        position: "top-right",
+      });
     } catch (error) {
       console.error("Error adding task:", error);
     }
@@ -83,6 +90,10 @@ const Dashboard = () => {
       setEditTaskId(null);
       setIsEditing(false);
       setVisible(false); // Close the dialog after updating the task
+
+      toast.info("Task updated!", {
+        position: "top-right",
+      });
     } catch (error) {
       console.error("Error updating task:", error);
     }
@@ -99,6 +110,10 @@ const Dashboard = () => {
     try {
       await axios.delete(`/tasks/${taskId}`);
       setTasks(tasks.filter((task) => task._id !== taskId));
+
+      toast.error("Task deleted!", {
+        position: "top-right",
+      });
     } catch (error) {
       console.error("Error deleting task:", error);
     }
@@ -227,6 +242,7 @@ const Dashboard = () => {
   
   return (
     <div className="main-div">
+      <ToastContainer />
       <button className="a-btn" onClick={() => setVisible(true)}>
         Add Task
       </button>
